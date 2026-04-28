@@ -1,0 +1,228 @@
+﻿bus_id,Latitude,Longitude,name_Korean,name_English
+1,37.782175,128.91881,강릉지사,Gangneung Branch
+2,37.8841012,127.7515791,강원본부직할,Gangwon Headquarters Directly Managed
+3,37.5257024,129.1079441,동해지사,Donghae Branch
+4,37.4343249,129.1779432,삼척지사,Samcheok Branch
+5,38.211761,128.5905534,속초고성지사,Sokcho-Goseong Branch
+6,38.1083094,127.9861374,양구지사,Yanggu Branch
+7,38.0722354,128.6177014,양양지사,Yangyang Branch
+8,37.1710591,128.4787543,영월지사,Yeongwol Branch
+9,37.3728881,127.9382723,원주지사,Wonju Branch
+10,38.065981,128.1662155,인제지사,Inje Branch
+11,37.380063,128.6504248,정선지사,Jeongseon Branch
+12,38.1476054,127.302627,철원지사,Cheorwon Branch
+13,37.158431,128.9869811,태백지사,Taebaek Branch
+14,37.3706367,128.4036121,평창지사,Pyeongchang Branch
+15,37.6854547,127.8772733,홍천지사,Hongcheon Branch
+16,38.1109325,127.7078886,화천지사,Hwacheon Branch
+17,37.4889479,127.9828042,횡성지사,Hoengseong Branch
+18,37.2774786,127.0294786,경기본부직할,Gyeonggi Headquarters Directly Managed
+19,37.4770417,126.8660242,광명지사,Gwangmyeong Branch
+20,37.4055498,127.2595176,광주지사,Gwangju Branch
+21,37.2346559,127.2056971,동용인지사,East Yongin Branch
+22,37.2581477,126.9692066,서수원지사,West Suwon Branch
+23,37.2581195,127.1141296,서용인지사,West Yongin Branch
+24,37.0189007,126.9162141,서평택지사,West Pyeongtaek Branch
+25,37.4443903,127.1305195,성남지사,Seongnam Branch
+26,37.3205935,126.827539,안산지사,Ansan Branch
+27,37.0079405,127.2642685,안성지사,Anseong Branch
+28,37.3838862,126.9472815,안양지사,Anyang Branch
+29,37.2894137,127.6350458,여주지사,Yeoju Branch
+30,37.135409,127.0724671,오산지사,Osan Branch
+31,37.2832499,127.4473318,이천지사,Icheon Branch
+32,36.9912891,127.1073892,평택지사,Pyeongtaek Branch
+33,37.5355966,127.227846,하남지사,Hanam Branch
+34,37.2062516,126.7716263,화성지사,Hwaseong Branch
+35,37.8339742,127.5105312,가평지사,Gapyeong Branch
+36,37.7368222,127.0820244,경기북부본부직할,Northern Gyeonggi Headquarters Directly Managed
+37,37.6415246,126.787805,고양지사,Goyang Branch
+38,37.5978157,127.1347986,구리지사,Guri Branch
+39,37.5960136,127.1741195,남양주지사,Namyangju Branch
+40,37.8892659,127.0574671,동두천지사,Dongducheon Branch
+41,37.4872312,127.4811936,양평지사,Yangpyeong Branch
+42,38.0155011,127.0712073,연천지사,Yeoncheon Branch
+43,37.7294666,126.7588877,파주지사,Paju Branch
+44,37.8903061,127.1952799,포천지사,Pocheon Branch
+45,34.8899811,128.6180426,거제지사,Geoje Branch
+46,35.6869976,127.9237166,거창지사,Geochang Branch
+47,35.2317245,128.6890297,경남본부직할,Gyeongnam Headquarters Directly Managed
+48,34.9727632,128.3256539,고성지사,Goseong Branch
+49,34.8515466,127.8942976,남해지사,Namhae Branch
+50,35.2322317,128.5364256,마산지사,Masan Branch
+51,35.4734316,128.7649554,밀양지사,Miryang Branch
+52,34.9314571,128.0812632,사천지사,Sacheon Branch
+53,35.4133242,127.8749111,산청지사,Sancheong Branch
+54,35.3193117,128.2566547,의령지사,Uiryeong Branch
+55,35.1807228,128.1219249,진주지사,Jinju Branch
+56,35.1637947,128.6611743,진해지사,Jinhae Branch
+57,35.5367842,128.5007601,창녕지사,Changnyeong Branch
+58,34.8823395,128.4167527,통영지사,Tongyeong Branch
+59,35.0646945,127.7456133,하동지사,Hadong Branch
+60,35.2744788,128.3987678,함안지사,Haman Branch
+61,35.5266968,127.7289933,함양지사,Hamyang Branch
+62,35.570517,128.1631123,합천지사,Hapcheon Branch
+63,36.5525762,128.7328845,경북본부직할,Gyeongbuk Headquarters Directly Managed
+64,36.1178498,128.3500525,구미지사,Gumi Branch
+65,36.2381588,128.5664163,군위지사,Gunwi Branch
+66,36.5878187,128.1897318,문경지사,Mungyeong Branch
+67,36.8861246,128.7414472,봉화지사,Bonghwa Branch
+68,36.4195462,128.1492358,상주지사,Sangju Branch
+69,36.6597467,129.1110463,영양지사,Yeongyang Branch
+70,36.8244885,128.6220788,영주지사,Yeongju Branch
+71,36.6611743,128.4608929,예천지사,Yecheon Branch
+72,36.9889644,129.3949525,울진지사,Uljin Branch
+73,36.3486262,128.6737337,의성지사,Uiseong Branch
+74,36.4360411,129.0528372,청송지사,Cheongsong Branch
+75,34.6350795,126.7778068,강진지사,Gangjin Branch
+76,34.6171976,127.292276,고흥지사,Goheung Branch
+77,35.2775962,127.2911363,곡성지사,Gokseong Branch
+78,35.1473089,126.7898299,광산지사,Gwangsan Branch
+79,34.9398248,127.6911817,광양지사,Gwangyang Branch
+80,35.1849938,126.9065991,광주전남본부직할,Gwangju-Jeonnam Headquarters Directly Managed
+81,35.1980957,127.4633506,구례지사,Gurye Branch
+82,35.0179817,126.7133244,나주지사,Naju Branch
+83,35.3093444,126.9840302,담양지사,Damyang Branch
+84,34.8034534,126.4094598,목포지사,Mokpo Branch
+85,34.9916794,126.4710728,무안지사,Muan Branch
+86,34.7623836,127.0725961,보성지사,Boseong Branch
+87,35.1514663,126.8910386,서광주지사,West Gwangju Branch
+88,34.969474,127.4862135,순천지사,Suncheon Branch
+89,34.7547881,126.1258283,신안지사,Sinan Branch
+90,34.7661708,127.7040008,여수지사,Yeosu Branch
+91,35.2732643,126.5036994,영광지사,Yeonggwang Branch
+92,34.800676,126.6950883,영암지사,Yeongam Branch
+93,34.3167296,126.7462849,완도지사,Wando Branch
+94,35.3112113,126.7965808,장성지사,Jangseong Branch
+95,34.6785624,126.9088733,장흥지사,Jangheung Branch
+96,34.4816926,126.2611809,진도지사,Jindo Branch
+97,35.0602742,126.5184791,함평지사,Hampyeong Branch
+98,34.5718736,126.6093297,해남지사,Haenam Branch
+99,35.056059,126.9791792,화순지사,Hwasun Branch
+100,37.4869344,127.0334941,강남지사,Gangnam Branch
+101,37.5238222,127.1355704,강동송파지사,Gangdong-Songpa Branch
+102,37.5197369,126.8688415,강서양천지사,Gangseo-Yangcheon Branch
+103,37.4781083,126.9811097,관악동작지사,Gwanak-Dongjak Branch
+104,37.4722139,126.8976898,구로금천지사,Guro-Geumcheon Branch
+105,37.5201646,126.8928588,남서울본부직할,Southern Seoul Headquarters Directly Managed
+106,37.4856988,127.0279981,서초지사,Seocho Branch
+107,35.8233624,128.7387814,경산지사,Gyeongsan Branch
+108,35.8546331,129.2249442,경주지사,Gyeongju Branch
+109,35.723972,128.2643709,고령지사,Goryeong Branch
+110,36.1268576,128.1197655,김천지사,Gimcheon Branch
+111,35.8037443,128.493177,남대구지사,Southern Daegu Branch
+112,35.8865906,128.5835863,대구본부직할,Daegu Headquarters Directly Managed
+113,35.874943,128.6409753,동대구지사,Eastern Daegu Branch
+114,36.1136567,129.3476427,북포항지사,Northern Pohang Branch
+115,35.8699046,128.5702802,서대구지사,Western Daegu Branch
+116,35.9308092,128.2996123,성주지사,Seongju Branch
+117,36.4113658,129.3752987,영덕지사,Yeongdeok Branch
+118,35.9565703,128.9311391,영천지사,Yeongcheon Branch
+119,37.4877245,130.903276,울릉지사,Ulleung Branch
+120,35.6399837,128.7483704,청도지사,Cheongdo Branch
+121,35.9825138,128.3947963,칠곡지사,Chilgok Branch
+122,36.0105934,129.3476465,포항지사,Pohang Branch
+123,36.4535516,127.1340966,공주지사,Gongju Branch
+124,36.1074145,127.4831885,금산지사,Geumsan Branch
+125,36.1925903,127.1001148,논산지사,Nonsan Branch
+126,36.8870577,126.6403163,당진지사,Dangjin Branch
+127,36.3526702,127.3429771,대덕유성지사,Daedeok-Yuseong Branch
+128,36.359899,127.4347396,대전세종충남본부직할,Daejeon-Sejong-Chungnam Headquarters Directly Managed
+129,36.3376329,126.6231707,보령지사,Boryeong Branch
+130,36.2832042,126.9304461,부여지사,Buyeo Branch
+131,36.3285382,127.3732048,서대전지사,Western Daejeon Branch
+132,36.7749838,126.4542918,서산지사,Seosan Branch
+133,36.0135454,126.6972483,서천지사,Seocheon Branch
+134,36.4910403,127.3037974,세종지사,Sejong Branch
+135,36.7876783,127.0078012,아산지사,Asan Branch
+136,36.6886775,126.8433622,예산지사,Yesan Branch
+137,36.8264525,127.1314313,천안지사,Cheonan Branch
+138,36.4447748,126.7987398,청양지사,Cheongyang Branch
+139,36.7472915,126.2989917,태안지사,Taean Branch
+140,36.6024768,126.6523497,홍성지사,Hongseong Branch
+141,35.2344076,129.2196368,기장지사,Gijang Branch
+142,35.2276497,128.8889606,김해지사,Gimhae Branch
+143,35.1601792,129.1447624,남부산지사,Southern Busan Branch
+144,35.196844,129.1049123,동래지사,Dongnae Branch
+145,35.5574128,129.3595736,동울산지사,Eastern Ulsan Branch
+146,35.1526224,129.0613592,부산울산본부직할,Busan-Ulsan Headquarters Directly Managed
+147,35.1687476,128.9898279,북부산지사,Northern Busan Branch
+148,35.167323,128.9568626,서부산지사,Western Busan Branch
+149,35.5576859,129.1127764,서울산지사,Seoul-San Branch
+150,35.3538289,129.0471722,양산지사,Yangsan Branch
+151,35.0880552,129.0362927,영도지사,Yeongdo Branch
+152,35.5416431,129.3249546,울산지사,Ulsan Branch
+153,35.0993232,129.0232228,중부산지사,Central Busan Branch
+154,37.6305681,127.0249447,강북성북지사,Gangbuk-Seongbuk Branch
+155,37.567708,127.0340591,광진성동지사,Gwangjin-Seongdong Branch
+156,37.6539176,127.0556668,노원도봉지사,Nowon-Dobong Branch
+157,37.6074444,127.0791618,동대문중랑지사,Dongdaemun-Jungnang Branch
+158,37.5418771,126.9465978,마포용산지사,Mapo-Yongsan Branch
+159,37.6053447,126.933673,서대문은평지사,Seodaemun-Eunpyeong Branch
+160,37.5652217,126.9832853,서울본부직할,Seoul Headquarters Directly Managed
+161,37.7427185,126.4981355,강화지사,Ganghwa Branch
+162,37.6392059,126.6811981,김포지사,Gimpo Branch
+163,37.4250107,126.6682817,남인천지사,Southern Incheon Branch
+164,37.9735552,124.7137584,백령지사,Baengnyeong Branch
+165,37.507079,126.7863724,부천지사,Bucheon Branch
+166,37.5338753,126.6449679,서인천지사,Western Incheon Branch
+167,37.4467266,126.8032345,시흥지사,Siheung Branch
+168,37.4894849,126.5002177,영종지사,Yeongjong Branch
+169,37.5168001,126.7275198,인천본부직할,Incheon Headquarters Directly Managed
+170,37.4693214,126.6602658,제물포지사,Jemulpo Branch
+171,35.4252935,126.6951147,고창지사,Gochang Branch
+172,35.9918727,126.7097813,군산지사,Gunsan Branch
+173,35.7998592,126.8995714,김제지사,Gimje Branch
+174,35.416354,127.3869149,남원지사,Namwon Branch
+175,35.7868869,127.1305519,남전주지사,Southern Jeonju Branch
+176,36.0084587,127.6539817,무주지사,Muju Branch
+177,35.7379884,126.7341292,부안지사,Buan Branch
+178,35.370988,127.1511991,순창지사,Sunchang Branch
+179,35.9617034,127.0046179,익산지사,Iksan Branch
+180,35.6204419,127.2859375,임실지사,Imsil Branch
+181,35.6448002,127.5179628,장수지사,Jangsu Branch
+182,35.846396,127.1496214,전북본부직할,Jeonbuk Headquarters Directly Managed
+183,35.569177,126.8436756,정읍지사,Jeongeup Branch
+184,35.7894402,127.4219239,진안지사,Jinan Branch
+185,33.2541465,126.5110998,서귀포지사,Seogwipo Branch
+186,33.4890364,126.5013018,제주본부직할,Jeju Headquarters Directly Managed
+187,36.9866896,128.3675379,단양지사,Danyang Branch
+188,36.6482024,127.4868526,동청주지사,Eastern Cheongju Branch
+189,36.4810593,127.7121993,보은지사,Boeun Branch
+190,36.1664543,127.7672096,영동지사,Yeongdong Branch
+191,36.3042072,127.5671475,옥천지사,Okcheon Branch
+192,36.9343927,127.6953281,음성지사,Eumseong Branch
+193,37.1392858,128.2066643,제천지사,Jecheon Branch
+194,36.7890676,127.5880688,증평괴산지사,Jeungpyeong-Goesan Branch
+195,36.8540755,127.435928,진천지사,Jincheon Branch
+196,36.6152516,127.4505384,충북본부직할,Chungbuk Headquarters Directly Managed
+197,36.9800022,127.9163821,충주지사,Chungju Branch
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,

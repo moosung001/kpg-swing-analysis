@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+
+# 환경
+.env
+.venv/
+venv/
+
+# 데이터 & 출력물
+outputs/
+_cache_maps/
+*.npy
+*.npz
+*.mat
+
+# 중복/임시 파일
+data_static/dyn_params 복사본.csv
+
+# macOS
+.DS_Store

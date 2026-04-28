@@ -1,0 +1,276 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import re
+import numpy as np
+import pandas as pd
+import networkx as nx
+
+from kpg_swing.core.loader import load_system
+from kpg_swing.engine.swing_api import solve_swing_ivp
+from kpg_swing.core.metrics import omega_to_hz, nadir, rocof_linear_fit
+from kpg_swing.engine.bus_restore import build_bus_restore_map_from_arrays
+from kpg_swing.engine.dcflow import build_B_and_meta
+
+
+ROOT = Path(__file__).resolve().parents[1]
+AGG_DIR = ROOT / "outputs" / "aggregates"
+
+
+def _pick_latest_batch_step_csv(agg_dir: Path) -> Path:
+    cands = sorted(agg_dir.glob("batch_step_*.csv"))
+    if not cands:
+        raise FileNotFoundError(f"no batch_step_*.csv in {agg_dir}")
+    # filename timestamp 우선, 실패하면 mtime
+    def key(p: Path):
+        m = re.search(r"batch_step_(\d{8}_\d{6})\.csv", p.name)
+        if m:
+            return (m.group(1), 0)
+        return ("", int(p.stat().st_mtime))
+    cands.sort(key=key)
+    return cands[-1]
+
+
+def _load_meta_for_csv(csv_path: Path) -> dict:
+    meta = csv_path.with_name(csv_path.stem + "_meta.json")
+    if meta.exists():
+        return json.loads(meta.read_text(encoding="utf-8"))
+    # 없으면 빈 dict
+    return {}
+
+
+def _build_bus_graph(bus: np.ndarray, branch: np.ndarray) -> nx.Graph:
+    bus = np.asarray(bus, dtype=float)
+    branch = np.asarray(branch, dtype=float)
+
+    bus_ids = bus[:, 0].astype(int)
+    G = nx.Graph()
+    for b in bus_ids.tolist():
+        G.add_node(int(b))
+
+    f = branch[:, 0].astype(int)
+    t = branch[:, 1].astype(int)
+    x = branch[:, 3].astype(float)
+    status = (branch[:, 10].astype(float) > 0.5)
+
+    eps = 1e-12
+    for k in range(branch.shape[0]):
+        if not status[k]:
+            continue
+        i = int(f[k]); j = int(t[k])
+        if i == j:
+            continue
+        x_abs = float(abs(x[k]))
+        x_abs = max(x_abs, eps)
+        G.add_edge(
+            i, j,
+            x=float(x[k]),
+            length=x_abs,        # shortest-path distance
+            w=1.0 / x_abs,       # coupling strength / capacity
+        )
+    return G
+
+
+
+def _compute_bus_centralities(G: nx.Graph) -> pd.DataFrame:
+    # 1) degree
+    deg = dict(G.degree())
+
+    # 2) k-core (coreness)
+    core = nx.core_number(G)
+
+    # 3) betweenness (unweighted shortest paths)
+    bet = nx.betweenness_centrality(G, normalized=True, weight=None)
+
+    # 4) eigenvector centrality (unweighted)
+    # 연결 그래프면 안정적. 수렴 이슈 있으면 max_iter 늘리면 됨.
+    eig = nx.eigenvector_centrality(G, max_iter=5000, tol=1e-10, weight=None)
+
+    # 5) strength (weighted degree with w = 1/|x|)
+    strength = dict(G.degree(weight="w"))
+
+    # 6) closeness_x (distance = |x|)
+    clo_x = nx.closeness_centrality(G, distance="length")
+
+    # 7) current-flow closeness (effective resistance based)
+    # weight는 "capacity/strength"로 해석되므로 w=1/|x|를 넣는 게 맞음.
+    cf_clo = nx.current_flow_closeness_centrality(G, weight="w", solver="lu")
+
+    bus_ids = sorted(G.nodes())
+    df = pd.DataFrame({
+        "bus_id": bus_ids,
+        "degree": [deg[b] for b in bus_ids],
+        "kcore": [core[b] for b in bus_ids],
+        "betweenness": [bet[b] for b in bus_ids],
+        "eigenvector": [eig[b] for b in bus_ids],
+        "strength": [strength[b] for b in bus_ids],
+        "closeness_x": [clo_x[b] for b in bus_ids],
+        "cf_closeness": [cf_clo[b] for b in bus_ids],
+    })
+    return df
+
+
+
+def _spearman_table(df: pd.DataFrame, y_cols: list[str], x_cols: list[str]) -> pd.DataFrame:
+    out = []
+    for y in y_cols:
+        for x in x_cols:
+            a = df[[x, y]].dropna()
+            if a.shape[0] < 5:
+                rho = np.nan
+            else:
+                rho = a[x].rank().corr(a[y].rank())
+            out.append({"x": x, "y": y, "spearman_rho": float(rho) if np.isfinite(rho) else np.nan, "n": int(a.shape[0])})
+    return pd.DataFrame(out)
+
+
+def main():
+    csv_path = _pick_latest_batch_step_csv(AGG_DIR)
+    meta = _load_meta_for_csv(csv_path)
+
+    print("[info] csv:", csv_path)
+    if meta:
+        print("[info] meta:", csv_path.with_name(csv_path.stem + "_meta.json"))
+
+    df_runs = pd.read_csv(csv_path)
+
+    outdir = AGG_DIR / "analysis_busfield"
+    outdir.mkdir(parents=True, exist_ok=True)
+
+    # case paths는 meta에 저장돼 있을 수도 있고, csv row에 있을 수도 있음
+    case_mfile = df_runs["case_mfile"].iloc[0]
+    dyn_csv = df_runs["dyn_csv"].iloc[0]
+
+    sys = load_system(case_mfile=case_mfile, dyn_params_csv=dyn_csv)
+
+    # 버스 복원 맵(한 번만)
+    restore = build_bus_restore_map_from_arrays(
+        bus=sys.bus,
+        branch=sys.branch,
+        gen_bus_ids=sys.gen_bus_ids,
+        xd_prime_pu=sys.xd_prime_pu,
+        slack_bus_id=sys.slack_bus_id,
+    )
+
+    # 버스 그래프 중심성(한 번만)
+    G = _build_bus_graph(sys.bus, sys.branch)
+    df_cent = _compute_bus_centralities(G)
+
+    # 결과를 long-form으로 모음: run_id x bus_id
+    rows = []
+
+    for r in df_runs.itertuples(index=False):
+        run_id = str(r.run_id)
+        t_event = float(r.t_event_s)
+        t_final = float(r.t_final_s)
+        dt = float(r.dt_s)
+        rocof_win = float(r.rocof_fit_window_s)
+
+        step_gen_local_idx = int(r.step_gen_local_idx)
+        step_dPeq_pu = float(r.step_dPeq_pu)
+        D_scale = float(r.D_scale)
+
+        # 적분
+        t_eval = np.arange(0.0, t_final + 0.5 * dt, dt, dtype=float)
+
+        D_used = sys.D * D_scale
+        delta0 = sys.delta_guess
+        omega0 = np.zeros(sys.ng, dtype=float)
+
+        sol = solve_swing_ivp(
+            K=sys.K,
+            Peq=sys.Peq,
+            M=sys.M,
+            D=D_used,
+            delta0=delta0,
+            omega0=omega0,
+            t_span=(0.0, t_final),
+            t_eval=t_eval,
+            rtol=1e-8,
+            atol=1e-10,
+            method="RK45",
+            step_t=t_event,
+            step_gen_idx=step_gen_local_idx,
+            step_dPeq=step_dPeq_pu,
+            disturbance=None,
+        )
+
+        if not sol.success:
+            print("[warn] ivp failed for run:", run_id, "message:", sol.message)
+            continue
+
+        t = np.asarray(sol.t, dtype=float)
+
+        y = np.asarray(sol.y, dtype=float)  # (2*ng, nt)
+        ng = sys.ng
+        delta_int = y[:ng, :].T             # (nt, ng)
+        omega_int = y[ng:, :].T             # (nt, ng)
+
+
+        # bus omega 복원 -> df(Hz)
+        omega_bus = restore.restore_bus_omega(omega_int)  # (nt, nb) rad/s
+        df_bus = omega_to_hz(omega_bus)                  # (nt, nb) Hz deviation
+
+        inj_bus_id = int(sys.gen_bus_ids[step_gen_local_idx])
+
+        # 각 bus에 대해 nadir/RoCoF 계산
+        bus_ids = restore.bus_ids.tolist()
+        for j, bus_id in enumerate(bus_ids):
+            dfj = df_bus[:, j]
+            nad, nad_t, _k = nadir(dfj, t=t)
+            rocof = rocof_linear_fit(t=t, df=dfj, t0=t_event, window=rocof_win)
+
+            rows.append({
+                "run_id": run_id,
+                "inj_gen_local_idx": step_gen_local_idx,
+                "inj_bus_id": inj_bus_id,
+                "step_dPeq_pu": step_dPeq_pu,
+                "D_scale": D_scale,
+                "bus_id": int(bus_id),
+                "bus_nadir_hz": float(nad),
+                "bus_nadir_drop_hz": float(abs(nad)),
+                "bus_nadir_time_s": float(nad_t) if nad_t is not None else np.nan,
+                "bus_rocof_fit_hz_per_s": float(rocof),
+                "bus_rocof_abs_hz_per_s": float(abs(rocof)) if np.isfinite(rocof) else np.nan,
+            })
+
+        print("[ok] run", run_id, "inj_bus", inj_bus_id)
+
+    df_long = pd.DataFrame(rows)
+    long_path = outdir / "busfield_long.csv"
+    df_long.to_csv(long_path, index=False)
+    print("[saved]", long_path)
+
+    # 중심성과 조인
+    df_join = df_long.merge(df_cent, on="bus_id", how="left")
+    join_path = outdir / "busfield_long_join_centrality.csv"
+    df_join.to_csv(join_path, index=False)
+    print("[saved]", join_path)
+
+    # 간단 상관(스피어만): 버스 응답 vs 중심성
+    y_cols = ["bus_nadir_drop_hz", "bus_rocof_abs_hz_per_s"]
+    # 기존(예시): x_cols에 'closeness'가 남아있어서 에러남
+    # x_cols = ["degree", "betweenness", "closeness", "closeness_x", "pagerank", ...]
+
+    # 수정: 너가 최종 선정한 7개만
+    x_cols = [
+        "degree",
+        "kcore",
+        "betweenness",
+        "eigenvector",
+        "strength",
+        "closeness_x",
+        "cf_closeness",
+    ]
+
+    df_corr = _spearman_table(df_join, y_cols=y_cols, x_cols=x_cols)
+    corr_path = outdir / "corr_spearman_busfield_vs_centrality.csv"
+    df_corr.to_csv(corr_path, index=False)
+    print("[saved]", corr_path)
+
+    print("[done] outputs in:", outdir)
+
+
+if __name__ == "__main__":
+    main()
