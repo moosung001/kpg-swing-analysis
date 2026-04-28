@@ -1,72 +1,114 @@
-# KPG-193 Swing Simulator v2
+# Frequency Synchronization Analysis of an Oscillator-Based Power Grid
 
-> **논문 서밋 버전** — 전력계통 주파수 응답의 네트워크 중심성 기반 취약 버스 분석
+**Moosung Kim, Heetae Kim**  
+Department of Energy Engineering, Korea Institute of Energy Technology (KENTECH)
 
-한국 전력망(KPG-193, 193버스) 모델에 스윙 방정식을 적용한 배치 시뮬레이터입니다.
-발전기 탈락 시나리오 대규모 배치 실행 → 각 버스의 주파수 취약도(Nadir, RoCoF) 계산 → 네트워크 중심성 지표와의 상관관계 분석까지 수행합니다.
+> *Submitted to New Physics: Sae Mulli, April 2026*  
+> arXiv preprint: *coming soon*
 
-## 핵심 기술
+---
 
-- **Kron Reduction**: 193버스 → 41 발전기버스 축소 (내부 구현, PowerModels 의존 없음)
-- **Swing Equation ODE**: SciPy RK45, 단일/다중 외란 지원
-- **배치 시뮬레이션**: 모든 발전기 버스 × 복수 ΔP 조합 병렬 실행
-- **취약도 분석**: Nadir, RoCoF, Angle Spread 등 지표 산출
-- **중심성 상관관계**: PageRank, Closeness, Betweenness, Eigenvector vs. 취약도 지표
-- **Pareto 프런트**: 관찰 버스 선정 최적화 (취약도 커버리지 vs. 버스 수)
+## Overview
 
-## 주요 결과
+This repository contains the simulation code for the paper:
 
-\![Pareto Analysis](fig_pareto_masterpiece_final_band.png)
+> **Frequency synchronization analysis of an oscillator-based power grid**  
+> Moosung Kim, Heetae Kim  
+> *New Physics: Sae Mulli* (under review)
 
-## 프로젝트 구조
+We model the Korean power grid (KPG-193, 193 buses) as a network of coupled oscillators governed by the inertial Kuramoto model (equivalently, the swing equation). Kron reduction eliminates load buses, leaving 41 generator nodes as the sole dynamical agents. Under generator trip disturbances, we show that:
 
-```
-├── src/kpg_swing/          # 핵심 패키지
-│   ├── engine/             # 물리 계산 엔진
-│   │   ├── swing_api.py    # Swing ODE API
-│   │   ├── events.py       # 외란 이벤트 처리
-│   │   ├── internal_kron.py # Kron 축소
-│   │   ├── dcflow.py       # DC 파워플로우
-│   │   ├── bus_restore.py  # Kron 역복원
-│   │   └── islanding.py    # 고립 섬 처리
-│   ├── core/
-│   │   ├── loader.py       # SystemData 로더
-│   │   ├── metrics.py      # Nadir, RoCoF 등 지표 계산
-│   │   └── checks.py       # 입력 검증
-│   ├── paths.py            # 경로 관리
-│   └── ARCHITECTURE_CONTRACT.md  # 설계 규약 문서
-│
-├── scripts/                # 배치 실행 & 분석 스크립트
-│   ├── main_batch_step.py  # 배치 시뮬레이션 실행 진입점
-│   ├── analyze_batch_step.py # 결과 분석
-│   ├── analyze_network_vs_response.py  # 중심성 상관관계
-│   └── ...                 # 시각화 스크립트
-│
-├── data_static/            # 정적 입력 데이터
-│   ├── dyn_params.csv      # 발전기 동특성 (H, M, D)
-│   ├── bus_location.csv    # 버스 지리 좌표
-│   └── line_catalog.csv    # 선로 정격 데이터
-│
-├── KPG193_ver1_2/          # 한국 전력망 모델 (MATPOWER 형식)
-├── scenarios/              # 시나리오 입력 CSV
-├── pyproject.toml
-└── plot_coi_paper.py       # 논문 그림 재현 스크립트
-```
+- **RoCoF** is dominated by local inertia
+- **Frequency nadir** is further shaped by network structure
+- **Eigenvector centrality** provides the strongest correlation with nadir vulnerability
+- High-centrality nodes exhibit a dual role: sensitive to remote disturbances, yet self-stabilizing when disturbed directly
 
-## 실행 방법
+## Reproducing the Results
+
+### 1. Install
 
 ```bash
+git clone https://github.com/moosung001/kpg-swing-analysis.git
+cd kpg-swing-analysis
 pip install -e .
-pip install scipy matplotlib networkx
-
-# 배치 시뮬레이션 실행
-python scripts/main_batch_step.py
-
-# 결과 분석
-python scripts/analyze_batch_step.py
-python scripts/analyze_network_vs_response.py
+pip install scipy pandas numpy networkx matplotlib seaborn
 ```
 
-## 기술 스택
+### 2. Run batch simulation
 
-`Python` `NumPy` `SciPy` `Pandas` `NetworkX` `Matplotlib` `Seaborn`
+Simulates generator trip events across all 41 generator buses with multiple ΔP magnitudes:
+
+```bash
+python scripts/main_batch_step.py
+```
+
+Results are saved under `outputs/aggregates/`.
+
+### 3. Reproduce paper analysis
+
+```bash
+# Frequency nadir & RoCoF summary
+python scripts/analyze_batch_step.py
+
+# Network centrality vs. frequency vulnerability (Fig. 3–4 in paper)
+python scripts/analyze_network_vs_response.py
+
+# Bus-field analysis (Fig. 5 in paper)
+python scripts/analyze_busfield_vs_network
+```
+
+## Repository Structure
+
+```
+├── src/kpg_swing/          # Core simulation package
+│   ├── engine/             # Physics engine
+│   │   ├── swing_api.py        # Swing ODE integrator
+│   │   ├── events.py           # Disturbance event handling
+│   │   ├── internal_kron.py    # Kron reduction
+│   │   ├── dcflow.py           # DC power flow
+│   │   ├── bus_restore.py      # Inverse Kron mapping
+│   │   └── islanding.py        # Island detection
+│   └── core/
+│       ├── loader.py           # System data loader
+│       ├── metrics.py          # Nadir, RoCoF, angle spread
+│       └── checks.py           # Input validation
+│
+├── scripts/                # Analysis pipeline
+│   ├── main_batch_step.py          # Batch simulation entry point
+│   ├── analyze_batch_step.py       # Result aggregation
+│   ├── analyze_network_vs_response.py  # Centrality correlation
+│   ├── analyze_busfield_vs_network     # Bus-field analysis
+│   ├── analyze_injbus_centrality_corr.py
+│   └── analyze_generator_vs_params.py
+│
+├── data_static/            # Static input data
+│   ├── dyn_params.csv          # Generator inertia & damping (H, M, D)
+│   ├── bus_location.csv        # Geographic coordinates
+│   └── line_catalog.csv        # Line ratings
+│
+└── KPG193_ver1_2/          # KPG-193 network model (MATPOWER format)
+```
+
+## Data
+
+The Korean power grid model (KPG-193) is a publicly available research model comprising 193 buses and 41 generators. Generator dynamic parameters (inertia constant H, damping D) are assigned by generator type following standard references (Coal: H = 5.0 s, LNG: H = 3.0 s, Nuclear: H = 6.0 s).
+
+## Citation
+
+If you use this code, please cite:
+
+```bibtex
+@article{kim2026frequency,
+  title   = {Frequency synchronization analysis of an oscillator-based power grid},
+  author  = {Kim, Moosung and Kim, Heetae},
+  journal = {New Physics: Sae Mulli},
+  year    = {2026},
+  note    = {under review}
+}
+```
+
+*(This entry will be updated with volume, pages, and DOI upon publication.)*
+
+## Contact
+
+Heetae Kim — hkim@kentech.ac.kr
