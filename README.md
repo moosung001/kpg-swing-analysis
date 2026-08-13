@@ -14,7 +14,7 @@ This repository contains the simulation code for the paper:
 
 > **Frequency synchronization analysis of an oscillator-based power grid**  
 > Moosung Kim, Heetae Kim  
-> *New Physics: Sae Mulli* (under review)
+> *New Physics: Sae Mulli* (accepted; final publication details pending)
 
 We model the Korean power grid (KPG-193, 193 buses) as a network of coupled oscillators governed by the inertial Kuramoto model (equivalently, the swing equation). Kron reduction eliminates load buses, leaving 41 generator nodes as the sole dynamical agents. Under generator trip disturbances, we show that:
 
